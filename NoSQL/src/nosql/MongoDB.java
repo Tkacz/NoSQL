@@ -23,7 +23,7 @@ import java.io.FileWriter;
 
 /**
  *
- * @author rufus
+ * @author Rafal Tkaczyk
  */
 public class MongoDB {
 
@@ -75,7 +75,6 @@ public class MongoDB {
         } catch (MongoException ex) {
             System.out.println(ex.toString());
         }
-
     }
 
     public void findAll() {//wyświetla wszystkie rekordy z bazy
@@ -103,7 +102,7 @@ public class MongoDB {
         String str;
                 
         try {
-            FileWriter fw = new FileWriter("ufo_export.json");
+            FileWriter fw = new FileWriter("ufo_export_mongo.json");
             while (cur.hasNext()) {
                 obj = cur.next();
                 str = "{ ";
