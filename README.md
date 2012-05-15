@@ -25,7 +25,7 @@ Klasa 'RMySQL' odpowiada za połączenie z bazą MySQL i operacje wykonywane na 
 
 ## MapReduce
 
-Baza wczytuje dane z pliku .json, gdzie każdy wiersz zawiera dane, jak np:
+Do bazy wczytuję dane z pliku .json, gdzie każdy wiersz zawiera dane, jak np:
 
 ```json
 { "id": "1", "DateOccurred": "1995-10-09", "DateReported": "1995-10-09", "Location": " Iowa City, IA", "ShortDescription": "", "Duration": "", "LongDescription": "Man repts. witnessing &quot;flash, followed by a classic UFO, w/ a tailfin at back.&quot; Red color on top half of tailfin. Became triangular.", "USCity": "Iowa City", "USState": "ia", "YearMonth": "1995-10" }
