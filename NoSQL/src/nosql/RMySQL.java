@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.lang.model.element.Element;
 
 /**
  *
@@ -190,6 +192,37 @@ public class RMySQL {
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
+    }
+    
+    public ArrayList<Event> findAll() {//konwertowanie ResulSet'a do obiektu i dodanie do tablicy
+        ArrayList<Event> result = new ArrayList<Event>();
+        try {
+            select("SELECT * FROM Events;");
+
+            FileWriter fw = new FileWriter("ufo_export_sql.json");
+            String str;
+            while (rs.next()) {
+                Event temp = new Event();
+                temp.setId(Integer.toString(rs.getInt(1)));
+                temp.setDateOccurred(rs.getString(2));
+                temp.setDateReported(rs.getString(3));
+                temp.setLocation(rs.getString(4));
+                temp.setShortDescription(rs.getString(5));
+                temp.setDuration(rs.getString(6));
+                temp.setLongDescription(rs.getString(7));
+                temp.setUSCity(rs.getString(8));
+                temp.setUSState(rs.getString(9));
+                temp.setYearMonth(rs.getString(10));
+                result.add(temp);
+            }
+
+            fw.close();
+        } catch (SQLException ex) {
+            System.out.println("RS getString Exception: " + ex.toString());
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+        return result;
     }
     
     public void removeAll() {

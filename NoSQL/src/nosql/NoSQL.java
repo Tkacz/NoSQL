@@ -4,6 +4,8 @@
  */
 package nosql;
 
+import javax.swing.JFrame;
+
 
 /**
  *
@@ -16,13 +18,26 @@ public class NoSQL {
      */
     public static void main(String[] args) {
         
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                JFrame frame = new NoSQLView();
+                frame.setTitle("UFO in US");
+                frame.setLocationRelativeTo(null);
+                frame.setDefaultCloseOperation(NoSQLView.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+            }
+        });
+        
+        
         //// CSV to JSON ////
-        CSVtoJSON ctj = new CSVtoJSON();//konwertowanie pliku csv do jsona
+        //CSVtoJSON ctj = new CSVtoJSON();//konwertowanie pliku csv do jsona
         //ctj.convert("ufo.us.csv");
         
         
         //// MngoDB Test ////
-        MongoDB mongo = new MongoDB();
+        //MongoDB mongo = new MongoDB();
         //mongo.loadDataFromFile("ufo.us.json");//ładowanie danych z jsona
         //mongo.map_reduce();//ilość zdarzeń w kązdym stanie US
         //mongo.findAll();//drukuje wszystkie dane
@@ -31,7 +46,7 @@ public class NoSQL {
         
         
         //// MySQL Test ////
-        RMySQL sql = new RMySQL();
+        //RMySQL sql = new RMySQL();
         //sql.loadDataFromFile("ufo.us.json");//wczytywanie danych z jsona
         //sql.exportToJson();//eksport do jsona
         //sql.removeAll();//usuwanie zawartości tabeli
