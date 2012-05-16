@@ -20,6 +20,7 @@ import com.mongodb.MapReduceOutput;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,9 +28,9 @@ import java.io.FileWriter;
  */
 public class MongoDB {
 
-    Mongo m;
-    DB db;
-    DBCollection coll;
+    private Mongo m;
+    private DB db;
+    private DBCollection coll;
 
     public MongoDB() {//w konstruktorze łaczenie z bazą danych
         try {
@@ -77,12 +78,27 @@ public class MongoDB {
         }
     }
 
-    public void findAll() {//wyświetla wszystkie rekordy z bazy
+    public ArrayList<Event> findAll() {//wyświetla wszystkie rekordy z bazy
         DBCursor cur = coll.find();
         DBObject obj;
+        ArrayList<Event> result = new ArrayList<Event>();
+        
         while (cur.hasNext()) {
             obj = cur.next();
-            System.out.println("id: " + obj.get("id").toString());
+            Event temp = new Event();
+            temp.setId(obj.get("id").toString());
+            temp.setDateOccurred(obj.get("DateOccurred").toString());
+            temp.setDateReported(obj.get("DateReported").toString());
+            temp.setLocation(obj.get("Location").toString());
+            temp.setShortDescription(obj.get("ShortDescription").toString());
+            temp.setDuration(obj.get("Duration").toString());
+            temp.setLongDescription(obj.get("LongDescription").toString());
+            temp.setUSCity(obj.get("USCity").toString());
+            temp.setUSState(obj.get("USState").toString());
+            temp.setYearMonth(obj.get("YearMonth").toString());
+            result.add(temp);
+            
+            /*System.out.println("id: " + obj.get("id").toString());
             System.out.println("DateOccurred: " + obj.get("DateOccurred").toString());
             System.out.println("DateReported: " + obj.get("DateReported").toString());
             System.out.println("Location: " + obj.get("Location").toString());
@@ -92,8 +108,10 @@ public class MongoDB {
             System.out.println("USCity: " + obj.get("USCity").toString());
             System.out.println("USState: " + obj.get("USState").toString());
             System.out.println("YearMonth: " + obj.get("YearMonth").toString());
-            System.out.println("\n----------------------------------------------------------------\n");
+            System.out.println("\n----------------------------------------------------------------\n");*/
         }
+        
+        return result;
     }
     
     public void exportToJson() {//exportuje zawartość bazy do pliku .json
@@ -125,14 +143,21 @@ public class MongoDB {
         }
     }
     
-    public void map_reduce(){
+    public ArrayList<MRresult> map_reduce(){
         String map = "function() { emit(this.USState, 1); };";
         String reduce = "function(key, values) { var result = 0; values.forEach(function(count) { result += count; }); return result; };";
-                
+        ArrayList<MRresult> result = new ArrayList<MRresult>();
+        
         MapReduceOutput out = coll.mapReduce(map, reduce, null, MapReduceCommand.OutputType.INLINE, null);
+        String state, val;
         for (DBObject obj : out.results()) {
-            System.out.println(obj);
+            state = obj.get("_id").toString();
+            state = state.substring(1, state.length()-1);//usuwam cudzysłów
+            val = obj.get("value").toString();
+            val = val.substring(0, val.length()-2);//usuwam '.0'
+            result.add(new MRresult(state, Integer.parseInt(val)));
         }
+        return result;
     }
 
     public void removeAll() {//usuwa zawartość bazy
