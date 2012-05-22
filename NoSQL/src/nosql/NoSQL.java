@@ -58,12 +58,12 @@ public class NoSQL {
     }
     
     static void MySqlToMongo(MongoDB m, RMySQL sql) {
-        sql.exportToJson();
+        sql.exportToJson("ufo_sql.json");
         m.loadDataFromFile("ufo_export_sql.json");
     }
     
     static void MongoToSql(MongoDB m, RMySQL sql) {
-        m.exportToJson();
+        m.exportToJson("ufo_mongo.json");
         sql.loadDataFromFile("ufo_export_mongo.json");
     }
 }

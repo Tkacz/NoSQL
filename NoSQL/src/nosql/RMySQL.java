@@ -16,6 +16,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 
 /**
@@ -163,11 +165,11 @@ public class RMySQL {
         }
     }
 
-    public void exportToJson() {//konwertowanie ResulSet'a do obiektu i dodanie do tablicy
+    public void exportToJson(String filePath) {//konwertowanie ResulSet'a do obiektu i dodanie do tablicy
         try {
             select("SELECT * FROM Events;");
 
-            FileWriter fw = new FileWriter("ufo_export_sql.json");
+            FileWriter fw = new FileWriter(filePath);
             String str;
 
             while (rs.next()) {
@@ -222,6 +224,21 @@ public class RMySQL {
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
+        return result;
+    }
+    
+    public ArrayList<MRresult> map_reduce(){
+        ArrayList<MRresult> result = new ArrayList<MRresult>();
+        select("SELECT USState, sum(1) FROM Events GROUP BY USState;");
+        
+        try {
+            while(rs.next()) {
+                result.add(new MRresult(rs.getString(1), rs.getInt(2)));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+        }
+        
         return result;
     }
     

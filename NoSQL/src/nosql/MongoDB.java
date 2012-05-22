@@ -35,8 +35,8 @@ public class MongoDB {
     public MongoDB() {//w konstruktorze łaczenie z bazą danych
         try {
             m = new Mongo("127.0.0.1");
-            db = m.getDB("ufos");
-            coll = db.getCollection("event");
+            db = m.getDB("ufo");
+            coll = db.getCollection("events");
         } catch (UnknownHostException ex) {
             System.out.println(ex.toString());
         } catch (MongoException ex) {
@@ -114,13 +114,13 @@ public class MongoDB {
         return result;
     }
     
-    public void exportToJson() {//exportuje zawartość bazy do pliku .json
+    public void exportToJson(String filePath) {//exportuje zawartość bazy do pliku .json
         DBCursor cur = coll.find();
         DBObject obj;
         String str;
                 
         try {
-            FileWriter fw = new FileWriter("ufo_export_mongo.json");
+            FileWriter fw = new FileWriter(filePath);
             while (cur.hasNext()) {
                 obj = cur.next();
                 str = "{ ";

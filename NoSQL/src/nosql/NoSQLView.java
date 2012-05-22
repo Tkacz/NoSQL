@@ -12,8 +12,12 @@ package nosql;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 
 /**
@@ -26,12 +30,19 @@ public class NoSQLView extends javax.swing.JFrame {
     private MongoDB mongo;
     private RMySQL sql;
     private CSVtoJSON csvToJson;
+    private JFileChooser fc;
     
     /** Creates new form NOSQLView */
     public NoSQLView() {
 	Image image = Toolkit.getDefaultToolkit().getImage("src/icons/icon.png");
 	this.setIconImage(image);
 	model = new DataTableModel();
+        try {
+            fc = new JFileChooser(new java.io.File(".").getCanonicalPath());
+        } catch (IOException ex) {
+            fc = new JFileChooser();
+            System.out.println(ex.toString());
+        }
 	initComponents();
 	initConnections();
 	initTableModel();
@@ -94,13 +105,14 @@ public class NoSQLView extends javax.swing.JFrame {
         buttonAddSQL = new javax.swing.JButton();
         buttonDeleteSQL = new javax.swing.JButton();
         buttonExpSQL = new javax.swing.JButton();
+        buttonMPSQL = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(50, 0), new java.awt.Dimension(50, 0), new java.awt.Dimension(50, 32767));
         labelIcinMongoDB = new javax.swing.JLabel();
         buttonShowAllMongo = new javax.swing.JButton();
         buttonAddMongo = new javax.swing.JButton();
         buttonDeleteMongo = new javax.swing.JButton();
         buttonExpMongo = new javax.swing.JButton();
-        buttonUFO = new javax.swing.JButton();
+        buttonMPMongo = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(50, 0), new java.awt.Dimension(50, 0), new java.awt.Dimension(50, 32767));
         buttonCsvJson = new javax.swing.JButton();
 
@@ -160,6 +172,17 @@ public class NoSQLView extends javax.swing.JFrame {
             }
         });
         toolbar.add(buttonExpSQL);
+
+        buttonMPSQL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon.png"))); // NOI18N
+        buttonMPSQL.setFocusable(false);
+        buttonMPSQL.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        buttonMPSQL.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        buttonMPSQL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonMPSQLMousePressed(evt);
+            }
+        });
+        toolbar.add(buttonMPSQL);
         toolbar.add(filler1);
 
         labelIcinMongoDB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/mongodb.png"))); // NOI18N
@@ -211,16 +234,16 @@ public class NoSQLView extends javax.swing.JFrame {
         });
         toolbar.add(buttonExpMongo);
 
-        buttonUFO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon.png"))); // NOI18N
-        buttonUFO.setFocusable(false);
-        buttonUFO.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        buttonUFO.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        buttonUFO.addMouseListener(new java.awt.event.MouseAdapter() {
+        buttonMPMongo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon.png"))); // NOI18N
+        buttonMPMongo.setFocusable(false);
+        buttonMPMongo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        buttonMPMongo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        buttonMPMongo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                buttonUFOMousePressed(evt);
+                buttonMPMongoMousePressed(evt);
             }
         });
-        toolbar.add(buttonUFO);
+        toolbar.add(buttonMPMongo);
         toolbar.add(filler2);
 
         buttonCsvJson.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/csvTojason.png"))); // NOI18N
@@ -257,7 +280,19 @@ private void buttonShowAllMongoMousePressed(java.awt.event.MouseEvent evt) {//GE
 }//GEN-LAST:event_buttonShowAllMongoMousePressed
 
 private void buttonAddMongoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAddMongoMousePressed
-    mongo.loadDataFromFile("ufo.us.json");
+    
+    int returnVal = fc.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = fc.getSelectedFile();
+        String filePath = file.getAbsolutePath();
+        if(filePath.endsWith(".json")){
+            mongo.loadDataFromFile(filePath);
+        } else {
+            JOptionPane.showMessageDialog(null, "File must be .json", null, JOptionPane.ERROR_MESSAGE);
+        }                        
+    } else {
+        System.out.println("File Chooser error");
+    }
 }//GEN-LAST:event_buttonAddMongoMousePressed
 
 private void buttonDeleteMongoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonDeleteMongoMousePressed
@@ -265,10 +300,22 @@ private void buttonDeleteMongoMousePressed(java.awt.event.MouseEvent evt) {//GEN
 }//GEN-LAST:event_buttonDeleteMongoMousePressed
 
 private void buttonExpMongoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonExpMongoMousePressed
-    mongo.exportToJson();
+    
+    int returnVal = fc.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = fc.getSelectedFile();
+        String filePath = file.getAbsolutePath();
+        if(filePath.endsWith(".json")){
+            mongo.exportToJson(filePath);
+        } else {
+            JOptionPane.showMessageDialog(null, "File must be .json", null, JOptionPane.ERROR_MESSAGE);
+        }                        
+    } else {
+        System.out.println("File Chooser error");
+    }
 }//GEN-LAST:event_buttonExpMongoMousePressed
 
-private void buttonUFOMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonUFOMousePressed
+private void buttonMPMongoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonMPMongoMousePressed
     ArrayList<MRresult> mapreduce = mongo.map_reduce();
     
     JFrame frame = new JFrame("UFO Map Reduce");
@@ -278,7 +325,7 @@ private void buttonUFOMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     frame.setVisible(true);
     frame.setResizable(false);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-}//GEN-LAST:event_buttonUFOMousePressed
+}//GEN-LAST:event_buttonMPMongoMousePressed
 
 private void buttonCsvJsonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonCsvJsonMousePressed
     csvToJson.convert("ufo.us.csv");
@@ -292,7 +339,19 @@ private void buttonShowAllSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-
 }//GEN-LAST:event_buttonShowAllSQLMousePressed
 
 private void buttonAddSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAddSQLMousePressed
-    sql.loadDataFromFile("ufo.us.json");
+    
+    int returnVal = fc.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = fc.getSelectedFile();
+        String filePath = file.getAbsolutePath();
+        if(filePath.endsWith(".json")){
+            sql.loadDataFromFile(filePath);
+        } else {
+            JOptionPane.showMessageDialog(null, "File must be .json", null, JOptionPane.ERROR_MESSAGE);
+        }                        
+    } else {
+        System.out.println("File Chooser error");
+    }
 }//GEN-LAST:event_buttonAddSQLMousePressed
 
 private void buttonDeleteSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonDeleteSQLMousePressed
@@ -300,45 +359,37 @@ private void buttonDeleteSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-F
 }//GEN-LAST:event_buttonDeleteSQLMousePressed
 
 private void buttonExpSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonExpSQLMousePressed
-    sql.exportToJson();
+    
+    int returnVal = fc.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = fc.getSelectedFile();
+        String filePath = file.getAbsolutePath();
+        if(filePath.endsWith(".json")){
+            sql.exportToJson(filePath);
+        } else {
+            JOptionPane.showMessageDialog(null, "File must be .json", null, JOptionPane.ERROR_MESSAGE);
+        }                        
+    } else {
+        System.out.println("File Chooser error");
+    }
 }//GEN-LAST:event_buttonExpSQLMousePressed
+
+private void buttonMPSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonMPSQLMousePressed
+    ArrayList<MRresult> mapreduce = sql.map_reduce();
+    
+    JFrame frame = new JFrame("UFO Map Reduce");
+    MapReduceView panel = new MapReduceView(mapreduce);
+    frame.add(panel);
+    frame.pack();
+    frame.setVisible(true);
+    frame.setResizable(false);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+}//GEN-LAST:event_buttonMPSQLMousePressed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-	/* Set the Nimbus look and feel */
-	//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-	 * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-	 */
-	try {
-	    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-		if ("Nimbus".equals(info.getName())) {
-		    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-		    break;
-		}
-	    }
-	} catch (ClassNotFoundException ex) {
-	    java.util.logging.Logger.getLogger(NoSQLView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (InstantiationException ex) {
-	    java.util.logging.Logger.getLogger(NoSQLView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (IllegalAccessException ex) {
-	    java.util.logging.Logger.getLogger(NoSQLView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-	    java.util.logging.Logger.getLogger(NoSQLView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	}
-	//</editor-fold>
-
-	/* Create and display the form */
-	java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-	    public void run() {
-		new NoSQLView().setVisible(true);
-	    }
-	});
-    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddMongo;
     private javax.swing.JButton buttonAddSQL;
@@ -347,9 +398,10 @@ private void buttonExpSQLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JButton buttonDeleteSQL;
     private javax.swing.JButton buttonExpMongo;
     private javax.swing.JButton buttonExpSQL;
+    private javax.swing.JButton buttonMPMongo;
+    private javax.swing.JButton buttonMPSQL;
     private javax.swing.JButton buttonShowAllMongo;
     private javax.swing.JButton buttonShowAllSQL;
-    private javax.swing.JButton buttonUFO;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
     private javax.swing.JLabel labelIcinMongoDB;

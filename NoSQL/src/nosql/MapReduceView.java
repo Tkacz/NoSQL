@@ -45,8 +45,8 @@ public final class MapReduceView extends JPanel {
         try {
             String fileName;
             int val;
-            //bg = ImageIO.read(new File("gfx/bg.jpg"));
-            this.setBackground(Color.BLACK);
+            bg = ImageIO.read(new File("gfx/bg.jpg"));
+            //this.setBackground(Color.white);
             elements = new ArrayList<BufferedImage>();
             for(int i = 0, size = args.size(); i < size; i++) {
                 fileName = "gfx/map/" + args.get(i).getState() + ".png";
