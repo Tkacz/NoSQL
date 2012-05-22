@@ -62,3 +62,10 @@ public void map_reduce(){
         }
 }
 ```
+
+
+## Wizualizacja Map Reduce
+
+Ostatnim etapem mojej pracy było przedstawienie danych w czytelny dla uzytkownika sposób, oraz wizualizacja opisanych wyżej wyników Map Reduce. Utworzyłem prostą, okienkową aplikację, w której można przeglądać wszystkie dane w tabeli. Dla szystkich, zimplementowanych przeze mnie metod, obsługujących bazy danych, utworzyłem odpowiednie buttony.
+
+Wizualizację Map Reduce zrobiłem prostą metodą kolorowania obrazu poszczególnego stanu kolorem odpowiadającym przedziałowi częstotliwości pojawiania się UFO. Całą klasę utworzyłem samodzielnie, a do tego celu wykorzystałem Java 2D. Efekty zademonstruję na ostatnich zajęciach.
